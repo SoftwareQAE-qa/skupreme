@@ -1,0 +1,38 @@
+{
+  "product": {
+    "id": "67b6e00cf20fe6000262708e",
+    "name": "BHP Test",
+    "sku": "BHP-102",
+    "upc": "1112331"
+  },
+  "storageProvider": {
+    "id": "66d7443d819f48a5c0eba95f",
+    "name": "Warehouse ONE"
+  },
+  "pasteAddress": {
+    "searchText": "New York Marriott Marquis",
+    "suggestionMatch": "New York Marriott Marquis",
+    "expected": {
+      "recipient": "marriott marquis",
+      "addressLine1": "1535 Broadway",
+      "addressLine2": "Manhattan",
+      "city": "New York",
+      "state": "New York",
+      "zipCode": "10036",
+      "country": "United States"
+    }
+  },
+  "manualOrder": {
+    "quantity": 2
+  },
+  "existingCustomer": {
+    "name": "Alice Brown"
+  },
+  "orderStatuses": {
+    "pendingShipment": "Pending Shipment",
+    "pendingFulfillment": "Pending Fulfillment",
+    "shipped": "Shipped",
+    "canceled": "Canceled",
+    "returns": "Returns"
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "inputs": [
+    {
+      "type": "text",
+      "placeholder": "",
+      "id": ""
+    },
+    {
+      "type": "text",
+      "placeholder": "SKU, UPC, Title, ASIN...",
+      "id": ""
+    }
+  ],
+  "navLinks": [
+    {
+      "text": "",
+      "href": "/app/dashboard/awaiting-actions/"
+    },
+    {
+      "text": "",
+      "href": "/app/notifications/"
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/67b6e00cf20fe6000262708e"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "BHP Test  Kit\nSKU\nBHP-102",
+      "href": "/app/catalogs/catalog/67b6e00cf20fe6000262708e"
+    },
+    {
+      "text": "BHP Test  Kit\nSKU\nBHP-102",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/6838ac8bc986c6b41f644fd1"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "test2 \nSKU\ntest2",
+      "href": "/app/catalogs/catalog/6838ac8bc986c6b41f644fd1"
+    },
+    {
+      "text": "test2 \nSKU\ntest2",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/69f9c0f96d87a70a72b33d3b"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "Zulay Test 1 \nSKU\nzulay-test-1",
+      "href": "/app/catalogs/catalog/69f9c0f96d87a70a72b33d3b"
+    },
+    {
+      "text": "Zulay Test 1 \nSKU\nzulay-test-1",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/68eff6dcc8375dfe455fd44d"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "WGT3045 \nSKU\nWGT3045",
+      "href": "/app/catalogs/catalog/68eff6dcc8375dfe455fd44d"
+    },
+    {
+      "text": "WGT3045 \nSKU\nWGT3045",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/6800bb6d74d33c0002c24c30"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "444444 \nSKU\n444444\nASIN\n444444",
+      "href": "/app/catalogs/catalog/6800bb6d74d33c0002c24c30"
+    },
+    {
+      "text": "444444 \nSKU\n444444\nASIN\n444444",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/6838a43ec986c6b41f644e7b"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "test \nSKU\ntest",
+      "href": "/app/catalogs/catalog/6838a43ec986c6b41f644e7b"
+    },
+    {
+      "text": "test \nSKU\ntest",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/697786414b5c44b42e31cb04"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "sk-1 \nSKU\nsk-1",
+      "href": "/app/catalogs/catalog/697786414b5c44b42e31cb04"
+    },
+    {
+      "text": "sk-1 \nSKU\nsk-1",
+      "href": null
+    },
+    {
+      "text": "1 Variations",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/6822c0f35153be0002699097"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "Sample Item (SPS) Kit\nSKU\nSPSSupplierHD-20",
+      "href": "/app/catalogs/catalog/6822c0f35153be0002699097"
+    },
+    {
+      "text": "Sample Item (SPS) Kit\nSKU\nSPSSupplierHD-20",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": "/app/catalogs/catalog/67d0c0af8e3ae4000850e6eb"
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "Hanes Women's 8-Pack Cotton Stretch Brief (Bonus +2) (7, Assorted Colors) \nSKU\nA_HN_L_ASST_CTNSTR_BR_7_10PK_101\nASIN\nB096YJNF5H",
+      "href": "/app/catalogs/catalog/67d0c0af8e3ae4000850e6eb"
+    },
+    {
+      "text": "Hanes Women's 8-Pack Cotton Stretch Brief (Bonus +2) (7, Assorted Colors) \nSKU\nA_HN_L_ASST_CTNSTR_BR_7_10PK_101\nASIN\nB096YJNF5H",
+      "href": null
+    },
+    {
+      "text": "1",
+      "href": null
+    },
+    {
+      "text": "2",
+      "href": null
+    },
+    {
+      "text": "3",
+      "href": null
+    },
+    {
+      "text": "4",
+      "href": null
+    },
+    {
+      "text": "5",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": null
+    },
+    {
+      "text": "",
+      "href": null
+    }
+  ]
+}

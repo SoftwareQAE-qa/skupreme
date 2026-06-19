@@ -1,0 +1,21 @@
+{
+  "name": "skupreme",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:headed": "cypress run --headed --browser chrome",
+    "cy:run:inventory:headed": "cypress run --headed --browser chrome --spec cypress/e2e/Inventory/**/*.cy.js",
+    "cy:run:orders": "cypress run --spec cypress/e2e/Orders/**/*.cy.js",
+    "cy:explore": "cypress run --spec cypress/e2e/explore/**/*.cy.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^13.17.0",
+    "cypress-mochawesome-reporter": "^3.8.2"
+  }
+}
