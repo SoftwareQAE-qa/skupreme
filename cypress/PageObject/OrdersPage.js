@@ -20,91 +20,74 @@ export class OrdersPage {
     cy.contains('button, a, [role="tab"]', /d2c orders/i).click();
     return this;
   }
-
-  selectStatusTab(status) {
-    cy.contains('button, a, [role="tab"]', new RegExp(status, 'i')).click();
-    return this;
+  gotoPendingFulfillmentTab() {
+    cy.get('.pointing.menu .item').contains('Pending Fulfillment').scrollIntoView().should('be.visible').click()
+    cy.get('[class*="List__OrderTableRow-"]').should('be.visible') //order rows are visible
   }
-
   openCreateOrderModal() {
     cy.contains('button', /\+?\s*order/i, { timeout: 30000 }).click({ force: true });
     cy.contains(/manual order/i, { timeout: 30000 }).should('be.visible');
     return this;
   }
-
   openOrderById(orderId) {
     cy.contains('tr', orderId, { timeout: 60000 }).should('be.visible').click({ force: true });
     cy.url({ timeout: 30000 }).should('match', /\/app\/orders\/(?!list)/);
     return this;
   }
+  searchOrder(keyword) {
+    cy.get('input[placeholder="Order ID, Tracking Number"]').should('be.visible').clear().type(keyword)
+    cy.get('[class*="List__OrderTableRow-"]').contains(keyword).scrollIntoView().should('be.visible')
+  }
+  openOrderDetail({ index, orderNumber, orderID } = {}) {
+    let locator = 'a[href*="/app/orders/"]';
+    if (orderID) {
+      cy.get(`${locator}[href*="${orderID}"]`).should('be.visible').then($link => {
+        const href = $link.attr('href');
+        cy.wrap(href).as('orderHref');
+        cy.wrap($link).scrollIntoView().click({ force: true });
+      });
+    }
 
-  openFirstAvailableOrder() {
-    cy.contains('button, a, [role="button"]', /view.*approve/i, { timeout: 30000 })
-      .first()
-      .click({ force: true });
-    cy.url({ timeout: 30000 }).should('match', /\/app\/orders\/(?!list)/);
+    else if (orderNumber) {
+      cy.contains(locator, orderNumber).should('be.visible').then($link => {
+        const href = $link.attr('href');
+        cy.wrap(href).as('orderHref');
+        cy.wrap($link).scrollIntoView().click({ force: true });
+      });
+    }
+
+    else {
+      cy.get(locator).eq(index || 0).then($link => {
+        const href = $link.attr('href');
+        cy.wrap(href).as('orderHref');
+        cy.wrap($link).scrollIntoView().click({ force: true });
+      });
+    }
+
+    cy.get('@orderHref').then(href => {
+      cy.url({ timeout: 30000 }).should('include', href);
+    });
+    cy.get('[class*="Header__StatusContainer-"]').contains('Pending Shipment').scrollIntoView().should('be.visible')
+
     return this;
   }
 
-  openFirstFulfillableOrder() {
+  clickViewApprove(index = 0) {
     cy.contains('tr', /OID-|ORD-/, { timeout: 30000 })
-      .filter((_, row) => !/OOS/i.test(row.textContent || ''))
-      .first()
-      .then(($row) => {
+      .filter((_, row) => !/OOS/i.test(row.textContent || '')).eq(index).then(($row) => {
         const orderId =
           ($row.find('td').first().text().match(/\b(?:OID|ORD)-\d+\b/) || [])[0] ||
           ($row.text().match(/\b(?:OID|ORD)-\d+\b/) || [])[0];
         expect(orderId, 'order id').to.exist;
         cy.wrap(orderId).as('fulfilledOrderId');
 
-        cy.wrap($row)
-          .find('button, a, [role="button"]')
-          .contains(/view.*approve/i)
-          .click({ force: true });
-      });
-
-    cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible');
+        cy.wrap($row).find('.right .ui.button').should('contain.text', 'View & Approve').scrollIntoView().click({ force: true })
+      })
+    cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible') //Create Shipping Label section should be open
     return this;
   }
-
-  openFulfilledOrderDrawer() {
-    cy.get('@fulfilledOrderId').then((orderId) => {
-      this.selectStatusTab('Pending Fulfillment');
-      cy.contains('tr', orderId, { timeout: 60000 }).should('be.visible');
-      cy.contains('tr', orderId)
-        .find('button, a, [role="button"]')
-        .contains(/view.*approve/i)
-        .click({ force: true });
-    });
-
-    cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible');
-    return this;
-  }
-
-  assertFulfillSuccess() {
-    cy.contains(/order fulfillment initiated successfully/i, { timeout: 60000 }).should(
-      'be.visible'
-    );
-    return this;
-  }
-
   assertOrderInList(orderId) {
     cy.contains(orderId, { timeout: 60000 }).should('be.visible');
-    return this;
-  }
-
-  openShippingLabelDrawer() {
-    cy.get('body').then(($body) => {
-      if (Orders.createShippingLabelDrawer.test($body.text())) {
-        cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible');
-        return;
-      }
-
-      cy.contains('button', Orders.createShippingLabelDrawer, { timeout: 30000 }).click({
-        force: true,
-      });
-      cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible');
-    });
     return this;
   }
 
@@ -158,7 +141,7 @@ export class OrdersPage {
     return this;
   }
 
-  validateAddressIfNeeded(warehouseName) {
+  validateAddressIfNeeded(warehouseName) { //Enable Manual Override 
     cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible');
 
     if (warehouseName) {
@@ -177,7 +160,6 @@ export class OrdersPage {
   }
 
   fulfillOrder(warehouseName) {
-    this.openShippingLabelDrawer();
     this.validateAddressIfNeeded(warehouseName);
 
     cy.contains('button', Orders.fulfillOrderButton, { timeout: 30000 })
@@ -186,12 +168,6 @@ export class OrdersPage {
 
     return this;
   }
-
-  assertOrderStatus(expectedStatus) {
-    cy.contains(new RegExp(expectedStatus, 'i'), { timeout: 60000 }).should('be.visible');
-    return this;
-  }
-
   assertOrderWorkflowVisible() {
     cy.contains(/pending fulfillment|pending shipment|shipped|delivered|workflow/i, {
       timeout: 30000,
@@ -199,32 +175,4 @@ export class OrdersPage {
     return this;
   }
 
-  openShippingDetailsTab() {
-    cy.contains('button, a, [role="tab"]', Orders.shippingDetailsTab).click();
-    return this;
-  }
-
-  openLabelHistoryTab() {
-    cy.contains('button, a, [role="tab"]', Orders.labelHistoryTab).click();
-    return this;
-  }
-
-  assertLabelGenerated() {
-    cy.contains(/usps|ups|fedex|ground|label/i, { timeout: 120000 }).should('be.visible');
-    return this;
-  }
-
-  assertInventorySource(warehouseName) {
-    this.openShippingDetailsTab();
-    cy.contains(/inventory source/i).parent().should('contain.text', warehouseName);
-    return this;
-  }
-
-  assertNoOosWarning(orderId) {
-    cy.contains(orderId)
-      .parents('tr, [class*="row"]')
-      .first()
-      .should('not.contain.text', 'OOS');
-    return this;
-  }
 }

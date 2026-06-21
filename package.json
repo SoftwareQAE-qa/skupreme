@@ -15,7 +15,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cypress": "^13.17.0",
     "cypress-mochawesome-reporter": "^3.8.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "cypress-if": "^1.16.1"
   }
 }

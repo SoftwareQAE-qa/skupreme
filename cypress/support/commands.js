@@ -19,3 +19,7 @@ Cypress.Commands.add('loginFresh', (email = USER_EMAIL, password = USER_PASSWORD
   cy.contains('button', 'Login').click();
   cy.url({ timeout: 60000 }).should('include', '/app');
 });
+Cypress.Commands.add('verifyToast', (message) => {
+    cy.get('.notification-message').should('contain.text', message).first().click({ force: true }).wait(500)
+    //cy.get('.toast-message').should('not.exist')
+})
