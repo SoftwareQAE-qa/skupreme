@@ -12,7 +12,6 @@ describe('SKUPREME - Create Manual Order', () => {
     ordersPage.visitPendingShipment();
     ordersPage.assertPageLoaded().selectD2COrders();
   })
-
   it('ORD_DETAIL_01 | Validate order details page for Pending Shipment Orders', function () {
     ordersPage.visitPendingShipment()
     ordersPage.assertPageLoaded().selectD2COrders()
