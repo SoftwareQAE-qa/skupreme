@@ -58,12 +58,10 @@ export const ManualOrder = {
     'textarea[class*="AutoCompleteInput"], textarea[class*="GoogleAutocomplete"], [class*="GoogleAutocomplete"] textarea',
   addressSuggestionItem:
     '[class*="Suggestion"]:not(textarea):not(input), [class*="suggestion"]:not(textarea):not(input)',
-  searchCustomersInput: 'input[placeholder*="Name, Customer ID"]',
+  searchCustomersInput: 'input[placeholder="Name, Customer ID, E-Mail Address"]',
   customerSearchBox: '[class*="CustomerSearch"], .ui.search',
   customerDropdownResult: '.results.transition.visible .result, .results.visible .result',
   customerDropdownTitle: '.results.transition.visible .result .title, .results.visible .result .title',
   searchItemsInput: 'input[placeholder="Search items"]',
-  saveOrderButton: 'Save Order',
-  successToast: 'Order created successfully',
-  shippingLabelDrawer: 'Create Shipping Label',
+  saveOrderButton: 'Save Order'
 };

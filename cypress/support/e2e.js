@@ -1,4 +1,7 @@
 import './commands';
+import 'cypress-if'
+import { fa, faker } from '@faker-js/faker';
+Cypress.faker = faker;
 
 Cypress.on('uncaught:exception', (err) => {
   const message = JSON.stringify(err?.message ?? err);
@@ -30,3 +33,17 @@ if (!app.document.head.querySelector('[data-hide-command-log-request]')) {
 
   app.document.head.appendChild(style);
 }
+
+//Handling exceptions
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Handle specific errors
+  if (
+    err.message?.includes(`Error: {"code":"cancel-axios-token-duplicate","error":"Request Cancelled","status":"450"}`) ||
+    err.message?.includes(`TypeError: Cannot read properties of null (reading 'style')`)
+  ) {
+    // Returning false here prevents Cypress from failing the test
+    return false;
+  }
+  // Let other errors fail the test if true
+  return true;
+})

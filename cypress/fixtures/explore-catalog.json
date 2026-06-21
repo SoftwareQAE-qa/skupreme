@@ -61,11 +61,11 @@
       "href": null
     },
     {
-      "text": "Zulay Test 1 \nSKU\nzulay-test-1",
+      "text": "Zulay Test 1 Kit\nSKU\nzulay-test-1",
       "href": "/app/catalogs/catalog/69f9c0f96d87a70a72b33d3b"
     },
     {
-      "text": "Zulay Test 1 \nSKU\nzulay-test-1",
+      "text": "Zulay Test 1 Kit\nSKU\nzulay-test-1",
       "href": null
     },
     {
@@ -77,11 +77,11 @@
       "href": null
     },
     {
-      "text": "WGT3045 \nSKU\nWGT3045",
+      "text": "WGT3045 Kit\nSKU\nWGT3045",
       "href": "/app/catalogs/catalog/68eff6dcc8375dfe455fd44d"
     },
     {
-      "text": "WGT3045 \nSKU\nWGT3045",
+      "text": "WGT3045 Kit\nSKU\nWGT3045",
       "href": null
     },
     {
@@ -186,6 +186,10 @@
     },
     {
       "text": "5",
+      "href": null
+    },
+    {
+      "text": "6",
       "href": null
     },
     {

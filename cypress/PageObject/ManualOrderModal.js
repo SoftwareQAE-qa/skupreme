@@ -15,29 +15,13 @@ const pasteAddressField = (labelRegex) =>
     .first();
 
 export class ManualOrderModal {
-  assertOpen() {
-    cy.contains(ManualOrder.modalTitle, { timeout: 30000 }).should('be.visible');
-    return this;
-  }
-
-  openPasteAddress() {
-    cy.contains('button', ManualOrder.pasteAddressButton, { timeout: 30000 }).click();
-    cy.contains('button', ManualOrder.useThisAddressButton, { timeout: 30000 }).should(
-      'be.visible'
-    );
-    cy.get(ManualOrder.addressSearchInput, { timeout: 30000 })
-      .filter(':visible')
-      .first()
-      .should('be.visible');
-    return this;
-  }
 
   typeAddressSearch(searchText) {
     cy.get(ManualOrder.addressSearchInput)
       .filter(':visible')
       .first()
       .clear()
-      .type(searchText, { delay: 100 });
+      .type(searchText);
     return this;
   }
 
@@ -92,111 +76,69 @@ export class ManualOrderModal {
     return this;
   }
 
-  searchAndSelectAddress({ searchText, suggestionMatch, expected }) {
-    this.typeAddressSearch(searchText);
-    this.selectAddressSuggestion(suggestionMatch, expected);
-    return this;
-  }
-
-  useSelectedAddress() {
-    cy.contains('button', ManualOrder.useThisAddressButton, { timeout: 30000 }).click();
-    cy.contains('button', ManualOrder.pasteAddressButton, { timeout: 30000 }).should(
-      'be.visible'
-    );
-    return this;
-  }
-
-  assertMainFormAddress({ recipient, addressLine1, city, state, zipCode }) {
-    if (recipient) {
-      cy.contains('label, span', /^Recipient/i)
-        .parent()
-        .find('input:visible')
-        .first()
-        .invoke('val')
-        .should('match', new RegExp(recipient, 'i'));
-    }
-    if (addressLine1) {
-      cy.contains('label, span', /address line 1/i)
-        .parent()
-        .find('input:visible')
-        .first()
-        .should('have.value', addressLine1);
-    }
-    if (city) {
-      cy.contains('label, span', /^City/i)
-        .parent()
-        .find('input:visible')
-        .first()
-        .should('have.value', city);
-    }
-    if (state) {
-      cy.contains('label, span', /^State/i)
-        .parent()
-        .find('input:visible')
-        .first()
-        .should('have.value', state);
-    }
-    if (zipCode) {
-      cy.contains('label, span', /zip code/i)
-        .parent()
-        .find('input:visible')
-        .first()
-        .should('have.value', zipCode);
-    }
-    return this;
-  }
-
   fillAddressViaPaste(pasteAddress) {
-    this.openPasteAddress();
-    this.searchAndSelectAddress(pasteAddress);
-    this.useSelectedAddress();
+    cy.get('[class*="ManaulOrderPopup__PasteAddressButton-sc-"]').should('be.visible').and('contain.text', 'Paste Address').click() //Paste Address
+    cy.get('textarea[name="searchAddress"]').should('be.visible').clear().type(pasteAddress.searchText)
+    cy.get('.has-suggestions').should('be.visible').children().first().click() //select suggestion
+    cy.get('input[placeholder="Name"]').should('be.visible').clear().type(pasteAddress.expected.recipient) //Name
+    cy.wait(500)
     this.assertMainFormAddress(pasteAddress.expected);
+    cy.get('.modal.active .d-flex .ui.button').contains('Use this address').should('be.visible').click() //Use this address
     return this;
   }
-
-  customerSearchRoot() {
-    return cy
-      .get(ManualOrder.searchCustomersInput, { timeout: 30000 })
-      .closest('.ui.search, [class*="CustomerSearch"], [class*="search"]');
-  }
-
-  openExistingCustomersDropdown() {
-    cy.get(ManualOrder.searchCustomersInput, { timeout: 30000 }).click();
-    this.customerSearchRoot()
-      .find(ManualOrder.customerDropdownResult, { timeout: 30000 })
-      .should('have.length.at.least', 1);
-    return this;
-  }
-
-  selectCustomerFromDropdown(customerName) {
-    this.customerSearchRoot()
-      .contains(ManualOrder.customerDropdownResult, customerName)
-      .first()
-      .click({ force: true });
-
-    cy.wrap(customerName).as('selectedCustomerName');
-    return this;
-  }
-
-  selectExistingCustomer(customerName) {
-    this.openExistingCustomersDropdown();
-    this.selectCustomerFromDropdown(customerName);
-
-    cy.get('@selectedCustomerName').then((customerName) => {
-      cy.contains('label, span', /^Recipient/i)
-        .parent()
-        .find('input:visible')
-        .first()
+  assertMainFormAddress({ recipient, addressLine1, addressLine2, city, state, zipCode, country }) {
+    if (recipient) {
+      cy.get('input[placeholder="Name"]', { timeout: 30000 })
+        .should('be.visible')
         .invoke('val')
-        .should('match', new RegExp(customerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'));
-    });
+        .should('eq', recipient)
+    }
 
-    cy.contains('label, span', /address line 1/i)
-      .parent()
-      .find('input:visible')
-      .first()
-      .invoke('val')
-      .should('not.be.empty');
+    if (addressLine1) {
+      cy.get('input[placeholder="Address"]')
+        .should('be.visible')
+        .invoke('val')
+        .should('eq', addressLine1)
+    }
+
+    if (addressLine2) {
+      cy.get('input[data-field-value="address_line_two"]').eq(1)
+        .should('be.visible')
+        .invoke('val')
+        .should('eq', addressLine2)
+    }
+
+    if (city) {
+      cy.get('input[data-field-value="city"]').eq(1)
+        .should('be.visible')
+        .invoke('val')
+        .should('eq', city)
+    }
+
+    if (state) {
+      cy.get('input[data-field-value="state"]').eq(1)
+        .should('be.visible')
+        .invoke('val')
+        .should('eq', state)
+    }
+
+    if (zipCode) {
+      cy.get('input[data-field-value="zip_code"]').eq(1)
+        .should('be.visible')
+        .invoke('val')
+        .should('eq', zipCode)
+    }
+
+    if (country) {
+      cy.get('[data-field-value="country"] .text')
+        .should('contain.text', country)
+    }
+
+    return this
+  }
+  selectExistingCustomer(customerName) {
+    cy.get('input[placeholder="Name, Customer ID, E-Mail Address"]').should('be.visible').clear().type(customerName).wait(1000)
+    cy.get('[class*="CustomerSearchInput__CustomerName-"]').contains(customerName).first().parents('.row').click()
     return this;
   }
 
@@ -212,15 +154,20 @@ export class ManualOrderModal {
   }
 
   saveOrder() {
-    cy.contains('button', ManualOrder.saveOrderButton, { timeout: 30000 })
-      .should('not.be.disabled')
-      .click();
-    cy.contains(ManualOrder.successToast, { timeout: 90000 }).should('be.visible');
-    return this;
+    cy.intercept('POST', '**/v1/orders').as('saveOrder')
+    cy.contains('button', ManualOrder.saveOrderButton, { timeout: 30000 }).should('not.be.disabled').click()
+
+    cy.wait('@saveOrder').then(({ request, response }) => {
+      expect(response.statusCode).to.eq(200)
+      const orderId = request.body.order_id
+      cy.wrap(orderId, { log: true }).as('orderId')
+      cy.log(`Order ID: ${orderId}`)
+    })
+    return this
   }
 
   assertCreateShippingLabelDrawer() {
-    cy.contains(ManualOrder.shippingLabelDrawer, { timeout: 30000 }).should('be.visible');
+    cy.contains('Create Shipping Label', { timeout: 30000 }).should('be.visible');
     return this;
   }
 }

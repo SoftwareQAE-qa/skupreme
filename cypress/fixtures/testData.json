@@ -10,15 +10,15 @@
     "name": "Warehouse ONE"
   },
   "pasteAddress": {
-    "searchText": "New York Marriott Marquis",
-    "suggestionMatch": "New York Marriott Marquis",
+    "searchText": "208 Quincy St, Brooklyn, NY 11216, United States",
+    "suggestionMatch": "208 Quincy St, Brooklyn, NY 11216, United States",
     "expected": {
-      "recipient": "marriott marquis",
-      "addressLine1": "1535 Broadway",
-      "addressLine2": "Manhattan",
-      "city": "New York",
+      "recipient": "Hannah Smith",
+      "addressLine1": "208 Quincy St",
+      "addressLine2": "Brooklyn",
+      "city": "Kings County",
       "state": "New York",
-      "zipCode": "10036",
+      "zipCode": "11216",
       "country": "United States"
     }
   },
@@ -26,7 +26,7 @@
     "quantity": 2
   },
   "existingCustomer": {
-    "name": "Alice Brown"
+    "name": "Antonia Mullens"
   },
   "orderStatuses": {
     "pendingShipment": "Pending Shipment",
