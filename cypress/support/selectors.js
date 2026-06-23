@@ -7,8 +7,7 @@ export const Routes = {
     `/app/scm/storage-provider/${id}?tab=${tab}`,
   storageProvidersList: '/app/scm/storage-provider',
   pendingShipment: '/app/orders/list/Pending%20Shipment/?status=Pending+Shipment',
-  pendingFulfillment:
-    '/app/orders/list/Pending%20Fulfillment/?status=Pending+Fulfillment',
+  pendingFulfillment: '/app/orders/list/Pending%20Fulfillment/?status=Pending+Fulfillment'
 };
 
 export const Login = {

@@ -98,6 +98,21 @@ export class OrderDetailPage {
     })
     return this;
   }
+  updateFulfillmentStatus(status) {
+    cy.get('[role="listbox"]').should('be.visible').click() //3dot
+    cy.get('.menu .dropdown-action').contains('Update Fulfillment Status').should('exist').click({ force: true })
+    cy.url().should('include', '/app/orders/update-fulfillment-status/')
+    cy.get('.small-font').should('be.visible').and('contain.text', '0 selected items total') //0 selected items total should be visible
+    cy.get('.ui.fitted input').eq(0).should('exist').check({ force: true }) //select all products
+    cy.get('[data-field-value="status"]').should('be.visible').click() //open status dropdown
+    cy.get('.visible.menu [role="option"]').contains(status).should('be.visible').click() //select status
+    cy.get('button.ui.button').contains('Update Fulfillment Status').should('be.visible').click() //Update Fulfillment Status
+    cy.get('.ui.modal.active h3').should('be.visible').and('contain.text', 'Update Order Status')
+    cy.get('.ui.modal.active div').contains('Are you sure you want to update status for this order?').should('be.visible')
+    cy.get('.ui.modal.active .positive').should('contain.text', 'Yes').click()
+    cy.verifyToast('Order status updated')
+    return this;
+  }
   addValidAddress(address = {}) {
     const data = {
       addressLine1: '208 Quincy St',
@@ -173,5 +188,37 @@ export class OrderDetailPage {
     cy.url().should('include', '/app/orders/clone/')
     cy.wait(2000)
     cy.get('.save-action').should('be.visible').and('contain.text', 'Save Changes').click() //Save Changes
-}
+  }
+  validateOrderStatus(orderStatus) {
+    const statuses = [
+      'Pending Shipment',
+      'Pending Fulfillment',
+      'Shipped',
+      'Delivered'
+    ]
+
+    const currentIndex = statuses.indexOf(orderStatus)
+    expect(currentIndex, `Invalid order status: ${orderStatus}`).to.be.greaterThan(-1)
+
+    cy.get('[class*="Header__StatusContainer-sc-"]').should('have.length', statuses.length)
+
+    statuses.forEach((status, index) => {
+      cy.get('[class*="Header__StatusContainer-sc-"]')
+        .eq(index)
+        .should('be.visible')
+        .within(() => {
+          cy.get('b').should('contain.text', status)
+        })
+
+      cy.get('[class*="Header__StatusContainer-sc-"]')
+        .eq(index)
+        .then($status => {
+          if (index <= currentIndex) {
+            cy.wrap($status).should('have.class', 'white')
+          } else {
+            cy.wrap($status).should('have.class', 'mute')
+          }
+        })
+    })
+  }
 }

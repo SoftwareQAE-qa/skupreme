@@ -1,16 +1,26 @@
 import { Orders, Routes } from '../support/selectors';
 
 export class OrdersPage {
-  visitPendingFulfillment() {
-    cy.visit(Routes.pendingFulfillment);
-    return this;
-  }
-
   visitPendingShipment() {
     cy.visit(Routes.pendingShipment);
     return this;
   }
-
+  visitPendingFulfillment() {
+    cy.visit(Routes.pendingFulfillment);
+    return this;
+  }
+  visitShippedOrders() {
+    cy.visit('/app/orders/list/Shipped/')
+    return this
+  }
+  visitCanceledOrders() {
+    cy.visit('/app/orders/list/Canceled/?status=Canceled')
+    return this
+  }
+  visitReturnedOrders() {
+    cy.visit('/app/orders/list/Returns/?tab=all')
+    return this
+  }
   assertPageLoaded() {
     cy.contains('Orders', { timeout: 30000 }).should('be.visible');
     return this;
@@ -68,7 +78,7 @@ export class OrdersPage {
       cy.url({ timeout: 30000 }).should('include', href);
     });
     cy.get('[class*="Header__StatusContainer-"]').contains('Pending Shipment').scrollIntoView().should('be.visible')
-
+    cy.get('[class*="Details__Column-sc-"] [class*="TextCopyToClipboard__TextToCopy-sc"]').invoke('text').as('orderId')
     return this;
   }
 
