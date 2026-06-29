@@ -1,0 +1,46 @@
+name: SKUPREME e2e Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: e2e Test on Chrome
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          headed: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        if: always()
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: "alpha2automation@gmail.com"
+          password: "puktgxkwyjdsdanw"
+          subject: Daily Test Run Report
+          to: waqas.automation@gmail.com
+          from: Alpha Automation ${{github.run_id}}
+          body: |
+            SKUPREME Daily Test Run Report completed successfully!
+            Report Unique identifier ${{github.run_id}}
+          attachments: ${{ github.workspace }}/cypress/reports/html/*.html
+      - name: Uploading artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-execution-report
+          path: cypress/reports/html
+          retention-days: 7

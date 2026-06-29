@@ -27,12 +27,12 @@ export class OrdersPage {
   }
 
   selectD2COrders() {
-    cy.contains('button, a, [role="tab"]', /d2c orders/i).click();
+    cy.get('[title="D2C Orders"]').should('be.visible').and('contain.text', 'D2C Orders').click();
     return this;
   }
   gotoPendingFulfillmentTab() {
-    cy.get('.pointing.menu .item').contains('Pending Fulfillment').scrollIntoView().should('be.visible').click()
-    cy.get('[class*="List__OrderTableRow-"]').should('be.visible') //order rows are visible
+    cy.get('[data-node-key="Pending Fulfillment"]').contains('Pending Fulfillment').scrollIntoView().should('be.visible').click()
+    cy.get('.ant-table-row ').should('be.visible') //order rows are visible
   }
   openCreateOrderModal() {
     cy.contains('button', /\+?\s*order/i, { timeout: 30000 }).click({ force: true });
@@ -45,11 +45,12 @@ export class OrdersPage {
     return this;
   }
   searchOrder(keyword) {
-    cy.get('input[placeholder="Order ID, Tracking Number"]').should('be.visible').clear().type(keyword)
-    cy.get('[class*="List__OrderTableRow-"]').contains(keyword).scrollIntoView().should('be.visible')
+    cy.get('input[placeholder="Order ID, Tracking Number..."]').should('be.visible').clear().type(keyword)
+    cy.get('.ant-table-row ').contains(keyword).scrollIntoView().should('be.visible')
   }
   openOrderDetail({ index, orderNumber, orderID } = {}) {
     let locator = 'a[href*="/app/orders/"]';
+    cy.wait(1000)
     if (orderID) {
       cy.get(`${locator}[href*="${orderID}"]`).should('be.visible').then($link => {
         const href = $link.attr('href');
@@ -83,17 +84,38 @@ export class OrdersPage {
   }
 
   clickViewApprove(index = 0) {
-    cy.contains('tr', /OID-|ORD-/, { timeout: 30000 })
-      .filter((_, row) => !/OOS/i.test(row.textContent || '')).eq(index).then(($row) => {
-        const orderId =
-          ($row.find('td').first().text().match(/\b(?:OID|ORD)-\d+\b/) || [])[0] ||
-          ($row.text().match(/\b(?:OID|ORD)-\d+\b/) || [])[0];
+    // Match the Order ID from the order link text only (e.g. "OID-7701").
+    // Note: a row's textContent concatenates all cells with no separators,
+    // so matching against the whole row would merge the ID with the next cell.
+    const orderIdPattern = /(?:OID|ORD)-\d+/;
+    cy.get('.ant-table-tbody .ant-table-row', { timeout: 60000 })
+      .should('have.length.greaterThan', 0)
+      .then(($rows) => {
+        // jQuery filter (accepts a callback, unlike Cypress's .filter()).
+        // Keep only non-OOS rows whose Order ID looks like OID-#### / ORD-####.
+        const $eligible = $rows.filter((_, row) => {
+          const rowText = row.textContent || '';
+          const link = row.querySelector('a[href*="/app/orders/"]');
+          const linkText = (link && link.textContent) || '';
+          return !/OOS/i.test(rowText) && orderIdPattern.test(linkText);
+        });
+        expect($eligible.length, 'eligible OID-/ORD- rows').to.be.greaterThan(index);
+
+        const $row = $eligible.eq(index);
+        const linkText = ($row.find('a[href*="/app/orders/"]').text()) || '';
+        const orderId = (linkText.match(orderIdPattern) || [])[0];
         expect(orderId, 'order id').to.exist;
+        cy.wrap(orderId).as('orderId');
         cy.wrap(orderId).as('fulfilledOrderId');
 
-        cy.wrap($row).find('.right .ui.button').should('contain.text', 'View & Approve').scrollIntoView().click({ force: true })
-      })
-    cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible') //Create Shipping Label section should be open
+        cy.wrap($row).within(() => {
+          cy.contains('button', 'View & Approve')
+            .scrollIntoView()
+            .should('be.visible')
+            .click({ force: true });
+        });
+      });
+    cy.contains(Orders.createShippingLabelDrawer, { timeout: 30000 }).should('be.visible'); //Create Shipping Label section should be open
     return this;
   }
   assertOrderInList(orderId) {
