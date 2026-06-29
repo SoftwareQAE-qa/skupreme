@@ -1,4 +1,5 @@
-const { USER_EMAIL, USER_PASSWORD } = require('../../cypress-env.json');
+const USER_EMAIL = Cypress.env('USER_EMAIL');
+const USER_PASSWORD = Cypress.env('USER_PASSWORD');
 
 Cypress.Commands.add('login', (email = USER_EMAIL, password = USER_PASSWORD) => {
   cy.session([email, password], () => {
