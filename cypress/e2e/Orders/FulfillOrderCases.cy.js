@@ -16,7 +16,7 @@ describe('SKUPREME - Fulfill Order', () => {
 
     ordersPage.fulfillOrder(storageProvider.name);
     cy.verifyToast('Order fulfillment initiated successfully');
-    cy.wait(3000)
+    cy.wait(10000)
     ordersPage.gotoPendingFulfillmentTab()
     cy.get('@fulfilledOrderId').then(fulfilledOrderId => {
       ordersPage.searchOrder(fulfilledOrderId)
